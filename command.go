@@ -83,6 +83,12 @@ type Command struct {
 	// will print content of the "Version" variable.
 	Version string
 
+	// Context defines the optional context of the command. In normal command mode, which does not make sense.
+	// But as running in interactive mode( although cobra doesn't support just even ),
+	// definitely should have a variable to keep context state in.
+	// it is designed to accept any types as its value.
+	Context map[string]interface{}
+
 	// The *Run functions are executed in the following order:
 	//   * PersistentPreRun()
 	//   * PreRun()
@@ -233,6 +239,14 @@ func (c *Command) SetHelpFunc(f func(*Command, []string)) {
 // SetHelpCommand sets help command.
 func (c *Command) SetHelpCommand(cmd *Command) {
 	c.helpCommand = cmd
+}
+
+// SetContext sets context
+func (c *Command) SetContext(name string, object interface{}) {
+	if c.Context == nil {
+		c.Context = make(map[string]interface{})
+	}
+	c.Context[name] = object
 }
 
 // SetHelpTemplate sets help template to be used. Application can use it to set custom template.
